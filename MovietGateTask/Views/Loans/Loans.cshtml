@@ -1,0 +1,490 @@
+﻿@model MovietGateTask.ViewModels.LoansViewModel
+
+@{
+    ViewData["Title"] = "View";
+}
+
+
+
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.82.0">
+    <title>مثال الخروج · Bootstrap v5.0</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/checkout-rtl/">
+
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @@media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="~/dist/form-validation.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <div class="container">
+        <main>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <div class="row g-3">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="mb-3">السلف / المبالغ المقسطة</h4>
+
+                    <form class="needs-validation" action="~/addEmployee" method="post" novalidate id="EmployeeForm">
+                        <div class="row g-3">
+                            <div class="col-sm-5">
+                                <label for="name" class="form-label">الاسم الاول</label>
+                                <input type="text" class="form-control" id="name" name="Name" placeholder="" value="" required>
+                                <div class="invalid-feedback">
+                                    مطلوب الاسم الأول صالح.
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label for="Code" class="form-label">كود الموظف</label>
+                                <input type="text" class="form-control" id="Code" name="Code" placeholder="" value="" required>
+                                <div class="invalid-feedback">
+                                    مطلوب كود موظف صالح.
+                                </div>
+                            </div>
+
+                            <div class="col-sm-1">
+                                <label for="Active" class="form-label">فعال</label>
+                                <div class="input-group has-validation">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="Active" name="Active">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label for="Active" class="form-label"></label>
+                                <div class="input-group has-validation">
+                                    <button class="w-100 btn btn-primary btn-lg" id="submitEmployee" type="submit">أضف</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <br id="msg1"/>
+                    <hr />
+                    <br />
+
+                    <form class="needs-validation" action="~/addLoan" method="post" novalidate accept-charset="utf-8" id="LoanForm">
+                        <div class="row g-3">
+
+                            <div class="col-6">
+                                <label for="address" class="form-label">نوع السلفة / المبالغ المقسط</label>
+                                <select class="form-select" aria-label="Default select example" name="type" required>
+                                    <option value="" selected>إختر</option>
+
+                                    @foreach(var type in Model.LoanTypes) {
+
+                                        <option value="@type.Id">@type.Name</option>
+                                    }
+
+                                </select>
+                                <div class="invalid-feedback">
+                                    يرجى إختيار نوع السلفة / المبالغ المقسط.
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <label for="date" class="form-label"> التاريخ </label>
+                                <input type="date" class="form-control" id="date" name="date"  readonly>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="TotalAmount" class="form-label">إجمالي المبلغ</label>
+                                <div class="input-group has-validation">
+                                    <input class="form-control" type="number" id="TotalAmount" name="TotalAmount" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="installmentCount" class="form-label">عدد الأقساط</label>
+                                <div class="input-group has-validation">
+                                    <input class="form-control" type="number" id="installmentCount" min="1" max="12" value="12" step="1" required name="installmentCount">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="installmentAmount" class="form-label">قيمة القسط</label>
+                                <div class="input-group has-validation">
+                                    <input class="form-control" type="number" id="installmentAmount" name="installmentAmount" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="StartDate" class="form-label">تاريخ البداية</label>
+                                <div class="input-group has-validation">
+
+                                    <input type="month" class="form-control" id="StartDate" name="StartDate" required>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="address" class="form-label">الأشهر المستثناه</label>
+                                <select class="form-select" aria-label="Default select example" multiple name="ExceptedMonthes" id="excepted">
+                                    
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    يرجى إختيار الأشهر المستثناه.
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="StartDate" class="form-label">تاريخ النهاية</label>
+                                <div class="input-group has-validation">
+
+                                    <input type="month" class="form-control" id="EndDate" name="EndDate" required readonly>
+
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label for="notes" class="form-label">ملاحظات</label>
+                                <input type="text" class="form-control" id="notes" name="notes" placeholder="" value="" >
+                                <div class="invalid-feedback">
+                                    مطلوب ملاحظات صالحة.
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <br id="msg2"/>
+                        <br />
+                        <div class="col-md-3">
+                            <button class="w-100 btn btn-primary btn-lg" type="submit">حفظ</button>
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+
+        </main>
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">&copy; 2021-2017 اسم الشركة</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">خصوصية</a></li>
+                <li class="list-inline-item"><a href="#">شروط</a></li>
+                <li class="list-inline-item"><a href="#">الدعم</a></li>
+            </ul>
+        </footer>
+    </div>
+
+
+    <script src="~/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/dist/form-validation.js"></script>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(function () {
+
+            var availableTags = [
+                @{
+                    foreach(var emp in Model.Employees) {
+                        @Html.Raw("\""+emp.Name+ "\"" + ",");
+                    }
+                }
+            ];
+            var codes = [
+                @{
+                    foreach(var emp in Model.Employees) {
+                        @Html.Raw("\""+emp.Code+ "\"" + ",");
+                    }
+                }
+            ];
+            var statuses = [
+                @{
+                    foreach(var emp in Model.Employees) {
+                        @Html.Raw((emp.Active).ToString().ToLower()+",");
+                    }
+                }
+            ];
+            var IDs = [
+                @{
+                    foreach(var emp in Model.Employees) {
+                        @Html.Raw((emp.Id)+",");
+                    }
+                }
+            ];
+            var arr = new Array();
+
+            $("#EmployeeForm").submit(function (e) {
+                e.preventDefault();
+
+                if ($(this)[0].checkValidity() === true) {
+                    $.post(
+                        $(this).prop("action"),
+                        $(this).serialize().replace("on", "true").replace("off", "false"),
+                        function (data, status) {
+                            IDs.push(data);
+
+                            if (data < 0)
+                                errormsg = "danger'>cann't proccess your request now.please try again later";
+                            else
+                                errormsg = "success'>Registered successfully";
+
+                            var msghtml = "<div class='dzFormMsg' style = 'margin-top: 20px;' id='msg1'><div class='gen alert alert-" + errormsg + "</div></div>";
+
+                            $("#msg1").replaceWith(msghtml);
+                            setTimeout(function () {
+                                $("#msg1").fadeOut("3000", function () {
+                                    $(this).replaceWith("<br id='msg1'/>").fadeIn("10000");
+                                });
+
+                            }, 4000);
+
+
+                            availableTags.push($("#name").val());
+                            codes.push($("#Code").val());
+                            var status = true;
+
+                            var checked = $("#Active").attr("checked");
+                            if (!typeof checked !== 'undefined' && checked !== false)
+                                status = false;
+
+                            statuses.push(status);
+                        }
+                    );
+                }
+                return false;
+            });
+
+            $("#LoanForm").submit(function (e) {
+                e.preventDefault();
+
+                var installmentcount = $("#installmentCount").val();
+
+                if ($(this)[0].checkValidity() === true) {
+                    $.post($(this).prop("action"),
+                        $(this).serialize() + '&EmployeeID=' + IDs[availableTags.indexOf($("#name").val())],
+                        function (data, status) {
+                            var errormsg = "";
+
+                            if (data < 0)
+                                errormsg = "danger'>Not Allowed Loans please finish all of your loans installments before asking for one more";
+                            else
+                                errormsg = "success'>successfully submited your request";
+
+                            var msghtml = "<div class='dzFormMsg' style = 'margin-top: 20px;' id='msg2'><div class='gen alert alert-" + errormsg + "</div></div>";
+
+                            $("#msg2").replaceWith(msghtml);
+                            setTimeout(function () {
+                                $("#msg2").fadeOut("3000", function () {
+                                    $(this).replaceWith("<br id='msg2'/>").fadeIn("10000");
+                                });
+
+                            }, 4000);
+
+                            availableTags.push($("#name").val());
+                            codes.push($("#Code").val());
+                            var status = true;
+
+                            var checked = $("#Active").attr("checked");
+                            if (!typeof checked !== 'undefined' && checked !== false)
+                                status = false;
+
+                            statuses.push(status);
+
+                            $("#LoanForm")[0].reset();
+                            init();
+                        }
+                    );
+                }
+                return false;
+            });
+
+            function CalculateEndDate() {
+                var date = new Date($("#StartDate").val());
+                var excepted = $("#excepted :selected").length;
+                var installmentcount = parseInt($("#installmentCount").val());
+
+                var month = (date.getMonth() + installmentcount + excepted);
+                var enddate = new Date();
+                enddate.setMonth(month,1);
+                
+                $("#EndDate").val(formatdate(enddate));
+
+                console.log("getMonth : " + parseInt(date.getMonth()) + " excepted : " + excepted + " installmentcount : " + installmentcount + " month : " + month + " enddate : " + formatdate(enddate) + "end date is : " + enddate);
+            }
+
+            $("#StartDate").change(CalculateEndDate);
+            $("#installmentCount").change(CalculateEndDate);
+            $("#excepted").change(CalculateEndDate);
+
+            $("select[multiple]").change(function () {
+                $(this).find("option:selected")
+                if ($(this).find("option:selected").length > 2) {
+                    $(this).find("option").removeAttr("selected");
+                    $(this).val(arr);
+                    CalculateEndDate();
+                }
+                else {
+                    arr = new Array();
+                    $(this).find("option:selected").each(function (index, item) {
+                        arr.push($(item).val());
+                    });
+                }
+            });
+
+            $("#name").autocomplete({
+                source: availableTags,
+                change: completeData
+            });
+
+            function completeData(event, ui) {
+
+                console.log("data completed");
+                var index = availableTags.indexOf($("#name").val());
+                console.log("index is : ", index);
+                if (index >= 0) {
+
+                    console.log("name is : ", $("#name").val());
+
+                    $('#Code').val(codes[index]);
+                    console.log("codes [index]is : ", codes[index]);
+                    console.log("statuses[index] codes is : ", statuses[index]);
+
+                    if (statuses[index])
+                        $("#Active").attr("checked","");
+                    else
+                        $("#Active").removeAttr("checked");
+
+                        $("#submitEmployee").attr("disabled", "");
+                }
+            }
+
+            $("#EmployeeForm :input").change(function () {
+                if ($("#submitEmployee").attr("disabled") !== 'undefined' && $("#submitEmployee").attr("disabled") !== false)
+                    $("#submitEmployee").removeAttr("disabled");
+
+            });
+
+            function initTodaysdate() {
+                var d = new Date();
+                $("#date").val(formatdate(d) +'-'+ formatDaydate(d));
+            }
+
+
+            function formatdate(d) {
+                month = '' + (d.getMonth() + 1),
+                    year = d.getFullYear();
+
+                if (month.length < 2)
+                    month = '0' + month;
+
+                return [year, month].join('-');
+            }
+
+            function formatDaydate(d) {
+
+                day = '' + d.getDate();
+
+                return day;
+            }
+
+
+            function initStartDate() {
+                var d = new Date();
+                var date = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+
+                $("#StartDate").val(formatdate(date));
+
+                $("#StartDate").prop("min", formatdate(date));
+            }
+
+            function initEndDate() {
+                var d = new Date();
+                d.setMonth(d.getMonth()+1,1);
+                $("#EndDate").val(formatdate(d));
+                CalculateEndDate();
+            }
+
+            $("#TotalAmount").change(function () {
+
+                var total = parseFloat($(this).val());
+                if (total > 10) {
+
+                    $("#installmentAmount").val(total / parseInt($("#installmentCount").val()));
+                    $("#installmentCount").change();
+                }
+
+            });
+
+            $("#installmentCount").change(function () {
+
+                if ($(this).val() == "" || $(this).val() < 1)
+                    $(this).val(1);
+
+                $("#installmentAmount").val(parseFloat($("#TotalAmount").val()) / parseInt($("#installmentCount").val()));
+            });
+
+            function init() {
+                initTodaysdate();
+                initStartDate();
+                initEndDate();
+            }
+
+            init();
+;
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
