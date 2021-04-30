@@ -2,7 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace MovietGateTask.Models {
+namespace MovieGateTask.DAL.Models
+{
     public partial class TaskContext : DbContext
     {
         public TaskContext()
@@ -23,10 +24,8 @@ namespace MovietGateTask.Models {
         {
             if (!optionsBuilder.IsConfigured)
             {
-#pragma warning disable CS1030 // #warning directive
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=DESKTOP-Q0NP2VN\\SQLEXPRESS;Database=Task;Integrated Security=True");
-#pragma warning restore CS1030 // #warning directive
             }
         }
 

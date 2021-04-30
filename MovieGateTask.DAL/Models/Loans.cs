@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MovietGateTask.Models {
+namespace MovieGateTask.DAL.Models
+{
     public partial class Loans
     {
         public Loans()

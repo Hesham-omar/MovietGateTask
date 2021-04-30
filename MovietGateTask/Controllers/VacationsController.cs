@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MovietGateTask.Models;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using MovieGateTask.DAL.Models;
 
 namespace MovietGateTask.Controllers {
     [ApiController]

@@ -7,11 +7,12 @@ using MovietGateTask.Models;
 using Newtonsoft.Json;
 using MovietGateTask.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using MovieGateTask.DAL.Models;
 
 namespace MovietGateTask.Controllers {
     [ApiController]
     public class LoansController : Controller {
-        private readonly TaskContext DB ;
+        private readonly TaskContext DB;
 
         public LoansController(TaskContext db) {
             DB = db;
@@ -24,7 +25,7 @@ namespace MovietGateTask.Controllers {
             List<LoanTypes> loanTypes = DB.LoanTypes.ToList();
 
             LoansViewModel Data = new LoansViewModel() {
-                Employees = employees,
+                Employees = employees ,
                 LoanTypes = loanTypes
             };
 
@@ -34,14 +35,14 @@ namespace MovietGateTask.Controllers {
 
         [Route("addEmployee")]
         [HttpPost]
-        public int addemployee([FromForm]Employees employee ) {
+        public int addemployee([FromForm] Employees employee) {
 
             try {
                 DB.Employees.Add(employee);
                 DB.SaveChanges();
                 return employee.Id;
 
-            }catch(Exception e) {
+            } catch(Exception e) {
                 return -1;
             }
 
@@ -49,15 +50,15 @@ namespace MovietGateTask.Controllers {
 
         [HttpPost]
         [Route("addLoan")]
-        public int AddLoan([FromForm] Loans Loan,[FromForm] short installmentCount) {
+        public int AddLoan([FromForm] Loans Loan ,[FromForm] short installmentCount) {
             try {
-                Employees employee = DB.Employees.Include("Loans").Include("Loans.Installments").FirstOrDefault(x=>x.Id == Loan.EmployeeId);
+                Employees employee = DB.Employees.Include("Loans").Include("Loans.Installments").FirstOrDefault(x => x.Id == Loan.EmployeeId);
 
                 if(employee != null) {
                     Loans installments = null;
                     if(employee.Loans != null && employee.Loans.Count > 0)
-                        installments = employee.Loans.Where(x=>x.Installments.OrderByDescending(x=>x.Date).FirstOrDefault().Date > DateTime.Now).FirstOrDefault();
-                    
+                        installments = employee.Loans.Where(x => x.Installments.OrderByDescending(x => x.Date).FirstOrDefault().Date > DateTime.Now).FirstOrDefault();
+
                     if(installments == null) {
                         DB.Loans.Add(Loan);
 
@@ -69,18 +70,18 @@ namespace MovietGateTask.Controllers {
                         }
                         var installmentAmount = Loan.TotalAmount / installmentCount;
 
-                        for(int i = 0; i < installmentCount-1; i++) {
+                        for(int i = 0; i < installmentCount - 1; i++) {
 
                             Loan.Installments.Add(new Installments() {
                                 Amount = installmentAmount ,
-                                Date = installmentsMonthes[i] 
+                                Date = installmentsMonthes[i]
                             });
                         }
 
                         DB.SaveChanges();
                         return Loan.Id;
                     }
-                    return -1; 
+                    return -1;
                 }
                 return -2;
             } catch(Exception e) {
@@ -92,14 +93,14 @@ namespace MovietGateTask.Controllers {
         [HttpGet("LoanID")]
         [Route("GetLoanData")]
         public Loans GetLoanData(int LoanID) {
-            Loans loan = DB.Loans.FirstOrDefault(x=>x.Id == LoanID);
+            Loans loan = DB.Loans.FirstOrDefault(x => x.Id == LoanID);
             return loan;
         }
 
         [HttpGet("EmployeeID")]
         [Route("GetEmployeeData")]
         public Employees GetEmployeeData(int EmployeeID) {
-            Employees emp = DB.Employees.FirstOrDefault(x=>x.Id == EmployeeID);
+            Employees emp = DB.Employees.FirstOrDefault(x => x.Id == EmployeeID);
             return emp;
         }
 

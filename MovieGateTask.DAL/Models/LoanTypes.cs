@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MovietGateTask.Models {
-    public partial class Employees
+namespace MovieGateTask.DAL.Models
+{
+    public partial class LoanTypes
     {
-        public Employees()
+        public LoanTypes()
         {
             Loans = new HashSet<Loans>();
         }
 
         public int Id { get; set; }
-        public string Code { get; set; }
         public string Name { get; set; }
-        public bool Active { get; set; }
 
         public virtual ICollection<Loans> Loans { get; set; }
     }

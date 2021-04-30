@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MovieGateTask.DAL.Models;
 using MovietGateTask.Models;
 
 namespace MovietGateTask.ViewModels {

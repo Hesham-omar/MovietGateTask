@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MovietGateTask.Models;
+using MovieGateTask.DAL.Models;
 
 namespace MovietGateTask {
     public class Startup {
