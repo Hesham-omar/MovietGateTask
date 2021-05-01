@@ -10,14 +10,18 @@ namespace MovietGateTask.BLL.BOs {
         private readonly IRepo<Loans> _loanRepo;
         private readonly IRepo<Employees> _EmployeesRepo;
 
-        public LoanBO(IRepo<Loans> loanRepo ,IRepo<Employees> employeesRepo) {
+        public LoanBO(IRepo<Loans> loanRepo ,IRepo<Employees> employeesRepo ) {
             _loanRepo = loanRepo;
             _EmployeesRepo = employeesRepo;
         }
 
         public bool CheckEmployeeCurrentLoans(int employeeID) {
             try {
-                Employees emp =  _EmployeesRepo.GetByID(employeeID);
+                List<string> includes = new List<string>() { 
+                    "Loans","Loans.Installments"
+                };
+
+                Employees emp =  _EmployeesRepo.Get(x=>x.Id == employeeID,includes).First();
                 if(emp == null)
                     return false;
                 Loans installments = null;
@@ -33,17 +37,25 @@ namespace MovietGateTask.BLL.BOs {
             } catch(Exception e) { return false; }
         }
 
-        public bool AddNewLoan(Loans loan , int installmentCount) {
+        public bool AddNewLoan(Loans loan , int installmentCount ,List<DateTime> excepted) {
 
             try {
                 _loanRepo.Insert(loan);
 
                 List<DateTime> installmentsMonthes = new List<DateTime>();
                 DateTime now = loan.StartDate;
-                while(now <= loan.EndDate) {
+                int diff = ((loan.EndDate.Year - now.Year) * 12) + loan.EndDate.Month - now.Month + 1;
+
+                while(diff>0) {
                     installmentsMonthes.Add(now);
                     now = now.AddMonths(1);
+                    diff --;
                 }
+                
+                foreach(var date in excepted) {
+                    installmentsMonthes.Remove(date);
+                }
+
                 var installmentAmount = loan.TotalAmount / installmentCount;
 
                 for(int i = 0; i < installmentCount - 1; i++) {
@@ -63,7 +75,10 @@ namespace MovietGateTask.BLL.BOs {
         }
 
         public Loans GetLoanData(int Id) {
-            return _loanRepo.GetByID(Id);
+            List<string> includes = new List<string>() { 
+                "Installments"
+            };
+            return _loanRepo.Get(x => x.Id == Id ,includes).FirstOrDefault();
         }
     }
 }

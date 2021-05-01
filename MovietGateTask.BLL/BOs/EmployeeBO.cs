@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using MovieGateTask.DAL.Models;
 using MovieGateTask.DAL.Repo;
+using System.Linq;
 
 namespace MovietGateTask.BLL.BOs {
     public class EmployeeBO {
 
-        private readonly IRepo <Employees> _EmployeeRepo;
+        private readonly IRepo<Employees> _EmployeeRepo;
 
         public EmployeeBO(IRepo<Employees> repo) {
             _EmployeeRepo = repo;
         }
 
         public IEnumerable<Employees> GetEmployees() {
-            List<Employees> employees = _EmployeeRepo.GetAll();
+            List<Employees> employees =  _EmployeeRepo.Get(x=>x.Id>0,new List<string>()).ToList();
             return employees;
         }
 
@@ -31,7 +32,10 @@ namespace MovietGateTask.BLL.BOs {
         }
 
         public Employees GetEmployeeData(int Id) {
-            return _EmployeeRepo.GetByID(Id);
+            List<string> includes = new List<string>() {
+                    "Loans","Loans.Installments"
+                };
+            return  _EmployeeRepo.Get(x=>x.Id>0,includes).First();
         }
 
     }

@@ -48,35 +48,53 @@ namespace MovietGateTask.Controllers {
 
         [HttpPost]
         [Route("addLoan")]
-        public int AddLoan([FromForm] Loans Loan ,[FromForm] short installmentCount) {
+        public int AddLoan([FromForm] Loans Loan ,[FromForm] short installmentCount,[FromForm] string[] ExceptedMonths) {
             try {
-
-                if(_loanBO.CheckEmployeeCurrentLoans(Loan.EmployeeId)) {
-
-                    if(_loanBO.AddNewLoan(Loan,installmentCount))
-                        return Loan.Id;
-
-                    return -1;
-
+                List<DateTime> Excepted = new List<DateTime>();
+                foreach(var date in ExceptedMonths) {
+                    string[] data = date.Split('-');
+                    Excepted.Add(new DateTime(int.Parse(data[0]),int.Parse(data[1]),1));
                 }
-                return -2;
-            } catch(Exception e) {
+
+                if(Loan.Notes == null)
+                    Loan.Notes = "";
+
+                int  diff = ((Loan.EndDate.Year - Loan.StartDate.Year) * 12) + Loan.EndDate.Month - Loan.StartDate.Month +1;
+                if(!(Loan.StartDate <= DateTime.Now || diff < 1 || installmentCount + Excepted.Count() != diff)) {
+                    if(_loanBO.CheckEmployeeCurrentLoans(Loan.EmployeeId)) {
+                        if(_loanBO.AddNewLoan(Loan ,installmentCount ,Excepted)) {
+                            return Loan.Id;
+                        } else {
+                            return -1;
+                        }
+                    }
+                        return -2;
+                }
                 return -3;
+            } catch(Exception e) {
+                return -4;
             }
         }
 
 
         [HttpGet("LoanID")]
         [Route("GetLoanData")]
-        public Loans GetLoanData(int LoanID) {
+        public IActionResult GetLoanData(int LoanID) {
             Loans loan = _loanBO.GetLoanData(LoanID);
-            return loan;
+            ObjectResult result = new ObjectResult(loan) {
+                Value = loan,StatusCode=200
+            };
+            return result;
         }
 
         [HttpGet("EmployeeID")]
         [Route("GetEmployeeData")]
         public Employees GetEmployeeData(int EmployeeID) {
             Employees emp = _employeeBo.GetEmployeeData(EmployeeID);
+            ObjectResult result = new ObjectResult(emp) {
+                Value = emp ,
+                StatusCode = 200
+            };
             return emp;
         }
 

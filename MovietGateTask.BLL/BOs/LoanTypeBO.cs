@@ -13,7 +13,7 @@ namespace MovietGateTask.BLL.BOs {
         }
 
         public IEnumerable<LoanTypes> GetTypes() {
-            List<LoanTypes> types = _loanTypes.GetAll();
+            List<LoanTypes> types = (List<LoanTypes>) _loanTypes.Get(x => x.Id > 0 ,new List<string>());
             return types;
         }
 

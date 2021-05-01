@@ -145,7 +145,7 @@
 
                             <div class="col-md-4">
                                 <label for="address" class="form-label">الأشهر المستثناه</label>
-                                <select class="form-select" aria-label="Default select example" multiple name="ExceptedMonthes" id="excepted">
+                                <select class="form-select" aria-label="Default select example" multiple name="ExceptedMonths[]" id="excepted">
                                     
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -294,6 +294,7 @@
                 var installmentcount = $("#installmentCount").val();
 
                 if ($(this)[0].checkValidity() === true) {
+                    //console.log($(this).serialize() + '&EmployeeID=' + IDs[availableTags.indexOf($("#name").val())]);
                     $.post($(this).prop("action"),
                         $(this).serialize() + '&EmployeeID=' + IDs[availableTags.indexOf($("#name").val())],
                         function (data, status) {
@@ -343,7 +344,7 @@
 
                 $("#EndDate").val(formatdate(enddate));
 
-                console.log("getMonth : " + parseInt(date.getMonth()) + " excepted : " + excepted + " installmentcount : " + installmentcount + " month : " + month + " enddate : " + formatdate(enddate) + "end date is : " + enddate);
+                //console.log("getMonth : " + parseInt(date.getMonth()) + " excepted : " + excepted + " installmentcount : " + installmentcount + " month : " + month + " enddate : " + formatdate(enddate) + "end date is : " + enddate);
 
             }
 
@@ -372,18 +373,18 @@
 
                 dates.forEach(function (item, index) {
                     newOptions.set(item, item);
-                    console.log("item is ", item);
+                    //console.log("item is ", item);
                 });
-                console.log("options are ", newOptions);
-                console.log("options.size are ", newOptions.size);
+                //console.log("options are ", newOptions);
+                //console.log("options.size are ", newOptions.size);
 
                 var $el = $("#excepted");
                 $el.empty(); // remove old options
                 newOptions.forEach(function (value, key, map) {
                     $el.append($("<option></option>")
                         .attr("value", value).text(key));
-                    console.log("key is ", key);
-                    console.log("value is ", value);
+                    //console.log("key is ", key);
+                    //console.log("value is ", value);
 
                 });
 
@@ -449,7 +450,8 @@
 
             function initTodaysdate() {
                 var d = new Date();
-                $("#date").val(formatdate(d) +'-'+ formatDaydate(d));
+                $("#date").val(formatdate(d) + '-' + formatDaydate(d));
+                console.log(formatdate(d) + '-' + formatDaydate(d));
             }
 
 
@@ -464,9 +466,10 @@
             }
 
             function formatDaydate(d) {
-
-                day = '' + d.getDate();
-
+                var day = '' + d.getDate();
+                if (day.length == 1)
+                    day = '0' + day;
+                
                 return day;
             }
 
