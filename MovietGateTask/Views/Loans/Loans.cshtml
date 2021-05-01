@@ -339,15 +339,64 @@
 
                 var month = (date.getMonth() + installmentcount + excepted);
                 var enddate = new Date();
-                enddate.setMonth(month,1);
-                
+                enddate.setMonth(month, 1);
+
                 $("#EndDate").val(formatdate(enddate));
 
                 console.log("getMonth : " + parseInt(date.getMonth()) + " excepted : " + excepted + " installmentcount : " + installmentcount + " month : " + month + " enddate : " + formatdate(enddate) + "end date is : " + enddate);
+
             }
 
-            $("#StartDate").change(CalculateEndDate);
-            $("#installmentCount").change(CalculateEndDate);
+            function dateRange(startDate, endDate) {
+                var start = startDate.split('-');
+                var end = endDate.split('-');
+                var startYear = parseInt(start[0]);
+                var endYear = parseInt(end[0]);
+                var dates = [];
+
+                for (var i = startYear; i <= endYear; i++) {
+                    var endMonth = i != endYear ? 11 : parseInt(end[1]) - 1;
+                    var startMon = i === startYear ? parseInt(start[1]) - 1 : 0;
+                    for (var j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 : j + 1) {
+                        var month = j + 1;
+                        var displayMonth = month < 10 ? '0' + month : month;
+                        dates.push([i, displayMonth].join('-'));
+                    }
+                }
+                return dates;
+            }
+
+            function UpdateExceptedMonths(dates) {
+
+                var newOptions = new Map();
+
+                dates.forEach(function (item, index) {
+                    newOptions.set(item, item);
+                    console.log("item is ", item);
+                });
+                console.log("options are ", newOptions);
+                console.log("options.size are ", newOptions.size);
+
+                var $el = $("#excepted");
+                $el.empty(); // remove old options
+                newOptions.forEach(function (value, key, map) {
+                    $el.append($("<option></option>")
+                        .attr("value", value).text(key));
+                    console.log("key is ", key);
+                    console.log("value is ", value);
+
+                });
+
+            }
+
+            function DateChange() {
+                CalculateEndDate();
+                var dates = dateRange($("#StartDate").val(), $("#EndDate").val());
+                UpdateExceptedMonths(dates);
+            }
+
+            $("#StartDate").change(DateChange);
+            $("#installmentCount").change(DateChange);
             $("#excepted").change(CalculateEndDate);
 
             $("select[multiple]").change(function () {
@@ -435,7 +484,7 @@
                 var d = new Date();
                 d.setMonth(d.getMonth()+1,1);
                 $("#EndDate").val(formatdate(d));
-                CalculateEndDate();
+                DateChange();
             }
 
             $("#TotalAmount").change(function () {
