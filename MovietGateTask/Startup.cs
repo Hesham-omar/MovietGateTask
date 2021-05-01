@@ -1,17 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MovietGateTask.Models;
 using MovieGateTask.DAL.Models;
+using Microsoft.EntityFrameworkCore;
+using MovieGateTask.DAL.Repo;
+using MovietGateTask.BLL.BOs;
 
 namespace MovietGateTask {
     public class Startup {
@@ -25,7 +20,18 @@ namespace MovietGateTask {
         public void ConfigureServices(IServiceCollection services) {
             services.AddControllers().AddNewtonsoftJson();
             services.AddMvc();
-            services.AddSingleton(typeof(TaskContext));
+
+            //dbContext
+            services.AddDbContext<TaskContext>(options=>options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
+            //Repos
+            services.AddTransient<IRepo<Employees>,GenericRepo<Employees>>();
+            services.AddTransient<IRepo<Loans>,GenericRepo<Loans>>();
+            services.AddTransient<IRepo<LoanTypes> ,GenericRepo<LoanTypes>>();
+            //BO's
+            services.AddTransient<EmployeeBO>();
+            services.AddTransient<LoanBO>();
+            services.AddTransient<LoanTypeBO>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

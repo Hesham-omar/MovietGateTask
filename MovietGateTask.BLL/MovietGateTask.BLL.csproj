@@ -5,11 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="BOs\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MovieGateTask.DAL\MovieGateTask.DAL.csproj" />
+    <ProjectReference Include="..\MovieGateTask.DAL\MovietGateTask.DAL.csproj" />
   </ItemGroup>
 
 </Project>

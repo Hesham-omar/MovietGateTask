@@ -5,31 +5,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using MovietGateTask.Models;
 using Newtonsoft.Json;
-using MovietGateTask.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using MovieGateTask.DAL.Models;
+using MovietGateTask.BLL.BOs;
+using MovietGateTask.EP.ViewModels;
 
 namespace MovietGateTask.Controllers {
     [ApiController]
     public class LoansController : Controller {
-        private readonly TaskContext DB;
+        private readonly EmployeeBO _employeeBo;
+        private readonly LoanBO _loanBO;
+        private readonly LoanTypeBO _loanTypesBO;
 
-        public LoansController(TaskContext db) {
-            DB = db;
+        public LoansController(EmployeeBO employeeBo ,LoanBO loanBO ,LoanTypeBO loanTypesBO) {
+            _employeeBo = employeeBo;
+            _loanBO = loanBO;
+            _loanTypesBO = loanTypesBO;
         }
 
 
         [Route("Loans")]
         public IActionResult Loans() {
-            List<Employees> employees = DB.Employees.ToList();
-            List<LoanTypes> loanTypes = DB.LoanTypes.ToList();
-
-            LoansViewModel Data = new LoansViewModel() {
-                Employees = employees ,
-                LoanTypes = loanTypes
+            var data = new LoansViewModel() {
+                Employees = _employeeBo.GetEmployees() ,
+                LoanTypes = _loanTypesBO.GetTypes(),
             };
 
-            return View(Data);
+            return View(data);
         }
 
 
@@ -37,51 +39,25 @@ namespace MovietGateTask.Controllers {
         [HttpPost]
         public int addemployee([FromForm] Employees employee) {
 
-            try {
-                DB.Employees.Add(employee);
-                DB.SaveChanges();
+            bool inserted = _employeeBo.AddEmployee(employee);
+
+            if(inserted)
                 return employee.Id;
-
-            } catch(Exception e) {
-                return -1;
-            }
-
+            return -1;
         }
 
         [HttpPost]
         [Route("addLoan")]
         public int AddLoan([FromForm] Loans Loan ,[FromForm] short installmentCount) {
             try {
-                Employees employee = DB.Employees.Include("Loans").Include("Loans.Installments").FirstOrDefault(x => x.Id == Loan.EmployeeId);
 
-                if(employee != null) {
-                    Loans installments = null;
-                    if(employee.Loans != null && employee.Loans.Count > 0)
-                        installments = employee.Loans.Where(x => x.Installments.OrderByDescending(x => x.Date).FirstOrDefault().Date > DateTime.Now).FirstOrDefault();
+                if(_loanBO.CheckEmployeeCurrentLoans(Loan.EmployeeId)) {
 
-                    if(installments == null) {
-                        DB.Loans.Add(Loan);
-
-                        List<DateTime> installmentsMonthes = new List<DateTime>();
-                        DateTime now = Loan.StartDate;
-                        while(now <= Loan.EndDate) {
-                            installmentsMonthes.Add(now);
-                            now = now.AddMonths(1);
-                        }
-                        var installmentAmount = Loan.TotalAmount / installmentCount;
-
-                        for(int i = 0; i < installmentCount - 1; i++) {
-
-                            Loan.Installments.Add(new Installments() {
-                                Amount = installmentAmount ,
-                                Date = installmentsMonthes[i]
-                            });
-                        }
-
-                        DB.SaveChanges();
+                    if(_loanBO.AddNewLoan(Loan,installmentCount))
                         return Loan.Id;
-                    }
+
                     return -1;
+
                 }
                 return -2;
             } catch(Exception e) {
@@ -93,14 +69,14 @@ namespace MovietGateTask.Controllers {
         [HttpGet("LoanID")]
         [Route("GetLoanData")]
         public Loans GetLoanData(int LoanID) {
-            Loans loan = DB.Loans.FirstOrDefault(x => x.Id == LoanID);
+            Loans loan = _loanBO.GetLoanData(LoanID);
             return loan;
         }
 
         [HttpGet("EmployeeID")]
         [Route("GetEmployeeData")]
         public Employees GetEmployeeData(int EmployeeID) {
-            Employees emp = DB.Employees.FirstOrDefault(x => x.Id == EmployeeID);
+            Employees emp = _employeeBo.GetEmployeeData(EmployeeID);
             return emp;
         }
 

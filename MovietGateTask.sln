@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovietGateTask.EP", "MovietGateTask\MovietGateTask.EP.csproj", "{CA1C9E7B-8077-4E9B-B3A8-4F616DE471B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieGateTask.DAL", "MovieGateTask.DAL\MovieGateTask.DAL.csproj", "{BBBD0FD4-CCF7-413B-BCB9-3DB73FD5B3CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovietGateTask.DAL", "MovieGateTask.DAL\MovietGateTask.DAL.csproj", "{BBBD0FD4-CCF7-413B-BCB9-3DB73FD5B3CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovietGateTask.BLL", "MovietGateTask.BLL\MovietGateTask.BLL.csproj", "{B469F19B-BA7B-4EAC-A6EE-F14038A81E5A}"
 EndProject

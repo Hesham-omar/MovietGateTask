@@ -11,7 +11,6 @@ using MovieGateTask.DAL.Models;
 
 namespace MovietGateTask.Controllers {
     [ApiController]
-    //[Route("[controller]")]
     public class VacationsController : ControllerBase {
 
         private static List<Vacation> Vacations;
